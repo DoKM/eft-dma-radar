@@ -181,7 +181,7 @@ namespace eft_dma_shared.Common.Unity
                     return compClass;
             }
             throw new Exception("Component Not Found!");
-        }    
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
