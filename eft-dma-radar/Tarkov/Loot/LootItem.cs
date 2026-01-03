@@ -145,6 +145,29 @@ namespace eft_dma_radar.Tarkov.Loot
                 return null;
             }
         }
+        /// <summary>
+        /// A user filter Group (not invidivual items)
+        /// </summary>
+        public LootFilterGroup MatchedFilterGroup
+        {
+            get
+            {
+                var groups = LootFilterManager.CurrentGroups?.Groups?
+                    .OrderBy(g => g.Index);
+
+                foreach (var group in groups)
+                {
+                    if (!group.Enabled)
+                        continue;
+
+                    var match = group.Items.FirstOrDefault(i => i.Enabled && i.ItemID == ID);
+                    if (match != null)
+                        return group;
+                }
+
+                return null;
+            }
+        }
 
         public bool IsGroupedBlacklisted
         {
@@ -402,6 +425,7 @@ namespace eft_dma_radar.Tarkov.Loot
                 return;
 
             EntityTypeSettings entitySettings;
+            LootFilterGroup? group = MatchedFilterGroup;
 
             if (this is LootAirdrop)
                 entitySettings = AirdropSettings;
@@ -413,9 +437,14 @@ namespace eft_dma_radar.Tarkov.Loot
                 entitySettings = ImportantLootSettings;
             else
                 entitySettings = LootSettings;
-
+            int maxDistance = entitySettings.RenderDistance;
+            if (group != null && group.DistanceRadar > 0)
+            {
+                maxDistance = group.DistanceRadar;
+            }
+            
             var dist = Vector3.Distance(localPlayer.Position, Position);
-            if (dist > entitySettings.RenderDistance)
+            if (dist > maxDistance)
                 return;
 
             var label = GetEntityUILabel(entitySettings);
@@ -527,6 +556,7 @@ namespace eft_dma_radar.Tarkov.Loot
                 return;
 
             EntityTypeSettingsESP espSettings;
+            LootFilterGroup? group = MatchedFilterGroup;
 
             if (this is LootAirdrop)
                 espSettings = AirdropESPSettings;
@@ -539,8 +569,14 @@ namespace eft_dma_radar.Tarkov.Loot
             else
                 espSettings = LootESPSettings;
 
+            int maxDistance = espSettings.RenderDistance;
+            if (group != null && group.DistanceESP > 0)
+            {
+                maxDistance = group.DistanceESP;
+            }
+
             var dist = Vector3.Distance(localPlayer.Position, Position);
-            if (dist > espSettings.RenderDistance)
+            if (dist > maxDistance)
                 return;
 
             if (!CameraManagerBase.WorldToScreen(ref _position, out var scrPos))

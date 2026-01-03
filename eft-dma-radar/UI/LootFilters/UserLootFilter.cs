@@ -70,6 +70,9 @@ namespace eft_dma_radar.UI.LootFilters
         private bool isStatic = true;
         private List<GroupedLootFilterEntry> items = new();
 
+        private int distanceESP = 0;
+        private int distanceRadar = 0;
+
         [JsonPropertyName("index")]
         public int Index
         {
@@ -115,6 +118,20 @@ namespace eft_dma_radar.UI.LootFilters
         {
             get => items;
             set => SetField(ref items, value);
+        }
+
+        [JsonPropertyName("distanceESP")]
+        public int DistanceESP
+        {
+            get => distanceESP;
+            set => SetField(ref distanceESP, value);
+        }
+
+        [JsonPropertyName("distanceRadar")]
+        public int DistanceRadar
+        {
+            get => distanceRadar;
+            set => SetField(ref distanceRadar, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

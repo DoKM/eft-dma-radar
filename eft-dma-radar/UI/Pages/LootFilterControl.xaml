@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:local="clr-namespace:eft_dma_radar.Converters"
+             xmlns:controls="clr-namespace:eft_dma_shared.Common.UI.Controls;assembly=eft-dma-shared"
              x:Name="GroupPanel"
              Unloaded="UserControl_Unloaded"
              mc:Ignorable="d" 
@@ -15,7 +16,7 @@
         <local:ItemIconConverter x:Key="ItemIconConverter"/>
         <local:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
         <local:Boolean2VisibilityConverter x:Key="Boolean2VisibilityConverter"/>
-    
+
         <!-- drag & drop styles -->
         <Style x:Key="DragDropIndicatorStyle" TargetType="Border">
             <Setter Property="Height" Value="2"/>
@@ -580,6 +581,43 @@
                                                        Margin="0"/>
                                         </StackPanel>
                                     </Grid>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Text="Render Distance - ESP" Style="{StaticResource LabelText}" 
+                                                VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" ToolTip="Set to 0 to use Default value for important loot"/>
+                                        <controls:TextValueSlider
+                                                x:Name="sldrESPDistance" Tag="LootFilterESPDistanceSlider"
+                                                Minimum="0" Maximum="1500"
+                                                MinContent="Default" MaxContent="Max"
+                                                SmallChange="1" TickFrequency="1"
+                                                IsSnapToTickEnabled="True"
+                                                ContentStringFormat="{}{0:0m}"
+                                                Grid.Row="0" Grid.Column="1"
+                                                ToolTip="Set to 0 to use Default value for important loot"
+                                                />
+
+                                        <TextBlock Text="Render Distance - Radar" Style="{StaticResource LabelText}" 
+                                                VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" ToolTip="Set to 0 to use Default value for important loot"/>
+                                        <controls:TextValueSlider
+                                                x:Name="sldrRadarDistance" Tag="LootFilterRadarDistanceSlider"
+                                                Minimum="0" Maximum="1500"
+                                                MinContent="Default" MaxContent="Max"
+                                                SmallChange="1" TickFrequency="1"
+                                                IsSnapToTickEnabled="True"
+                                                ContentStringFormat="{}{0:0m}"
+                                                Grid.Row="1" Grid.Column="1"
+                                                ToolTip="Set to 0 to use Default value for important loot"
+                                                />
+                                    </Grid>
+
                                 </hc:SimpleStackPanel>
                             </GroupBox>
                         </hc:SimpleStackPanel>

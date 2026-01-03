@@ -674,6 +674,10 @@ namespace eft_dma_radar.UI.Pages
             nudNotifyTime.ValueChanged += LootFilterNumericUpDown_ValueChanged;
             txtGroupName.TextChanged += LootFilterTextBox_TextChanged;
 
+            // Distance Input
+            sldrRadarDistance.ValueChanged += LootFilterSlider_ValueChanged;
+            sldrESPDistance.ValueChanged += LootFilterSlider_ValueChanged;
+
             // Loot Filter Items
             btnAddItem.Click += LootFilterButton_Click;
             btnRemoveItem.Click += LootFilterButton_Click;
@@ -786,6 +790,8 @@ namespace eft_dma_radar.UI.Pages
                 chkStatic.IsChecked = _selectedGroup.IsStatic;
                 chkNotify.IsChecked = _selectedGroup.Notify;
                 nudNotifyTime.Value = _selectedGroup.NotTime;
+                sldrRadarDistance.Value = _selectedGroup.DistanceRadar;
+                sldrESPDistance.Value = _selectedGroup.DistanceESP;
             }
             finally
             {
@@ -1061,6 +1067,30 @@ namespace eft_dma_radar.UI.Pages
                 return;
 
             _selectedGroup.NotTime = value;
+
+            SaveLootFilter();
+        }
+
+        enum LootFilterDistanceType
+        {
+            Radar,
+            ESP
+        }
+
+        private void EditLootFilterDistance(int value, LootFilterDistanceType type)
+        {
+            if (_isUpdatingControls || _selectedGroup == null)
+                return;
+            Console.WriteLine(value);
+            switch(type)
+            {
+                case LootFilterDistanceType.Radar:
+                    _selectedGroup.DistanceRadar = value;
+                    break;
+                case LootFilterDistanceType.ESP:
+                    _selectedGroup.DistanceESP = value;
+                    break;
+            }
 
             SaveLootFilter();
         }
@@ -1728,6 +1758,26 @@ namespace eft_dma_radar.UI.Pages
                         EditNotificationTime(value);
                         break;
                 }
+            }
+        }
+
+        private void LootFilterSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (sender is TextValueSlider slider && slider.Tag is string tag)
+            {
+                var intValue = (int)e.NewValue;
+                var floatValue = (float)e.NewValue;
+                switch (tag)
+                {
+                    case "LootFilterRadarDistanceSlider":
+                        EditLootFilterDistance(intValue, LootFilterDistanceType.Radar);
+                        break;
+                    case "LootFilterESPDistanceSlider":
+                        EditLootFilterDistance(intValue, LootFilterDistanceType.ESP);
+                        break;
+                }
+
+                Config.Save();
             }
         }
 
